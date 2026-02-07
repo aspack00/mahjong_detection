@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 from typing import Optional
-from PIL import Image
+from PIL import Image, ImageOps
 
 from ultralytics import YOLO
 import supervision as sv
@@ -53,6 +53,7 @@ class Predictor:
         if not image_path.is_file():
             raise FileNotFoundError(f"Image file {image_path} does not exist.")
         image = Image.open(str(image_path))
+        image = ImageOps.exif_transpose(image)
 
         # predict and draw results on the image.
         results = self.model(image, conf=0.3, imgsz=1024, agnostic_nms=True)[0]
